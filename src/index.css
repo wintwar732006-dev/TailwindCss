@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
 @theme{
   --color-card-bg:   #1C2B4A;
   --color-main: #020617; 
@@ -12,4 +17,9 @@
 @font-face {
   font-family: "Valley";
   src: url("../public/font/Valley.ttf");
+}
+
+.main-text-container::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }

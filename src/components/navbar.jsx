@@ -2,8 +2,12 @@ import Logo from '../../public/logo.png';
 import Reset from '../../public/reset.png';
 import Product from '../../public/bag.png';
 import User from '../../public/user.png';
+import { useState } from 'react';
 
 export default function Navbar() {
+
+    const [active, setActive] = useState("Product");
+
     return (
         <div className='w-full sticky z-50 top-0 h-20 flex justify-center border-b border-[#fff]/20 backdrop-blur-lg'>
             <nav className="w-320 pl-3 pr-3 flex items-center justify-between">
@@ -22,12 +26,12 @@ export default function Navbar() {
                 </div>
 
                 <div className='flex items-center h-full gap-2'>
-                    <div className='flex pl-2 pr-2 pt-2  font-[Valley] pb-2 bg-[#1a2537] p-1 text-[#fff]/60 rounded-xl text-[14px]'>
-                        <button className='bg-blue-600 text-[#fff] pl-3 pr-3 pt-1 pb-1 rounded-md flex justify-center items-center gap-1'><img src={Product} className='w-4'/>Product</button>
-                        <button className='pl-3 pr-3 pt-1 pb-1 rounded-md flex justify-center items-center gap-1'><img src={User} className='w-4'/>Creator</button>
+                    <div className='flex pl-2 pr-2 pt-2  font-[Valley] pb-2 bg-[#1a2537] p-1 text-[#fff]/60 rounded-xl text-[13px]'>
+                        <button onClick={() => setActive("Product")} className={`text-[#fff] pl-3 pr-3 pt-1 pb-1 rounded-md flex justify-center items-center gap-1 cursor-pointer transition duration-200 ${active === "Product" ? 'bg-blue-600' : ""}`}><img src={Product} className='w-4'/>Product</button>
+                        <button onClick={() => setActive("Creator")} className={`pl-3 pr-3 pt-1 pb-1 rounded-md flex justify-center items-center gap-1 cursor-pointer transition duration-200 ${active === "Creator" ? 'bg-blue-600' : ""}`}><img src={User} className='w-4'/>Creator</button>
                     </div>
 
-                    <button className='w-11 h-11 flex justify-center items-center bg-[#1a2537] rounded-xl'><img src={Reset} className='w-4'/></button>
+                    <button onClick={() => window.location.reload()} className='w-11 h-11 flex justify-center items-center bg-[#1a2537] rounded-xl cursor-pointer'><img src={Reset} className='w-4'/></button>
                 </div>
             </nav>
         </div>
