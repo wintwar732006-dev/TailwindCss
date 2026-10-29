@@ -5,13 +5,8 @@ body::-webkit-scrollbar {
   height: 0;
 }
 
-@theme{
-  --color-card-bg:   #1C2B4A;
-  --color-main: #020617; 
-  --color-font: #FFFFFF; 
-  --color--button-bg: #2563eb; 
-
-
+body {
+  background-color: #020617;
 }
 
 @font-face {
