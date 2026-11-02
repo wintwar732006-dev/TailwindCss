@@ -1,0 +1,15 @@
+[data-theme="Light"] {
+  color: #0f172a;
+}
+
+[data-theme="Light"] .text-white {
+  color: #0f172a;
+}
+
+[data-theme="Light"] .text-gray-600 {
+  color: #475569;
+}
+
+[data-theme="Light"] .text-slate-800 {
+  color: #334155;
+}

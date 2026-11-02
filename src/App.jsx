@@ -1,116 +1,123 @@
  import './index.css'
- import { act, useEffect } from 'react'; 
+ import { useEffect, useRef, useState } from 'react';
  import Watch from '../public/watch.png';
  import BgImage from '../public/bg.png';
 
 export default function Home() {
+  const [activeCard, setActiveCard] = useState('product');
+  const [copyStatus, setCopyStatus] = useState('Copy Code');
+  const activeCardRef = useRef('product');
+
+  const selectCard = (cardType) => {
+    activeCardRef.current = cardType;
+    setActiveCard(cardType);
+    setCopyStatus('Copy Code');
+  };
+
+  const copyActiveSnippet = async () => {
+    const snippet = activeCard === 'product' ? sampleCode : sampleCode2;
+    try {
+      await navigator.clipboard.writeText(snippet);
+      setCopyStatus('Copied!');
+    } catch (error) {
+      console.error('Unable to copy the code snippet.', error);
+      setCopyStatus('Copy failed');
+    }
+  };
 
   useEffect(() => {
-    let active = "product";
-
-    const productButton = document.getElementById('productButton');  // Product Toggle
-    const creatorButton = document.getElementById('creatorButton'); // Creator Toggle
-
-
     // Container
     const watchCard = document.getElementById('productCard');
-    const profileCard = document.getElementById('creatorCard'); 
-
-    // Handle Toogle Switch ( Product + Creator )
-    const handleToggle = () => {
-      productButton.addEventListener("click", () => {
-        active = "product";
-        
-        if(active === "product") {
-          profileCard.style.display = "none"
-          watchCard.style.display = "block";
-        }
-      })
-      creatorButton.addEventListener("click", () => {
-        active = "creator";
-        if(active === "creator") {
-          watchCard.style.display = "none"
-          profileCard.style.display = "block";
-        }
-      })
-    }
-    handleToggle()
-
 
     // Handle Radius Card
     const range = document.getElementById('range');
+    const radiusText = document.getElementById('radiusText');
 
     range.addEventListener('change', (e) => {
       const val = e.target.value; 
       radiusText.textContent = `${val}Px`; 
       // console.log(val)
 
-      if(watchCard.style.display === "block"){
-        watchCard.style.borderRadius = `${val}Px`
+      if(activeCardRef.current === "product"){
+        watchCard.style.borderRadius = `${val}Px`;
       }
-      if(profileCard.style.display === "block"){
-        profileCard.style.borderRadius = `${val}Px`
+      if(activeCardRef.current === "creator"){
+        document.getElementById('creatorCard').style.borderRadius = `${val}Px`;
       }
     })
 
     //Handle Shadow ( ClassName Track Base )
     const shadowSelect = document.getElementById('shadowSelect'); 
+    const shadowText = document.getElementById('shadowText');
+    shadowText.textContent = shadowSelect.value;
 
     shadowSelect.addEventListener("change", (e) => {
       const ShadowValue = e.target.value;
       // console.log(ShadowValue)
 
       if(ShadowValue === "floating"){
-        profileCard.style.display === "block" ? profileCard.style.boxShadow = "0 0 15px #1c1c1c59, 0 25px 25px #1c1c1c59" : "";
-        watchCard.style.display === "block" ? watchCard.style.boxShadow = "0 0 15px #1c1c1c59, 0 25px 25px #1c1c1c59" : "";
+        document.getElementById('creatorCard').style.boxShadow = "0 0 15px #1c1c1c59, 0 25px 25px #1c1c1c59";
+        watchCard.style.boxShadow = "0 0 15px #1c1c1c59, 0 25px 25px #1c1c1c59";
+
       }
       if(ShadowValue === "soft"){
-        profileCard.style.display === "block" ? profileCard.style.boxShadow = "0 0 3px #ffffff59, 0 3px 3px #ffffff59" : "";
-        watchCard.style.display === "block" ? watchCard.style.boxShadow = "0 0 3px #ffffff59, 0 3px 3px #ffffff59" : "";
+        document.getElementById('creatorCard').style.boxShadow = "0 0 3px #ffffff59, 0 3px 3px #ffffff59";
+        watchCard.style.boxShadow = "0 0 3px #ffffff59, 0 3px 3px #ffffff59";
       }
       if(ShadowValue === "neon"){
-        profileCard.style.display === "block" ? profileCard.style.boxShadow = "0 0 10px #3b82f659, 0 15px 25px #1d4ed859" : "";
-        watchCard.style.display === "block" ? watchCard.style.boxShadow = "0 0 10px #3b82f659, 0 15px 25px #1d4ed859" : "";
+        document.getElementById('creatorCard').style.boxShadow = "0 0 10px #3b82f659, 0 15px 25px #1d4ed859";
+        watchCard.style.boxShadow = "0 0 10px #3b82f659, 0 15px 25px #1d4ed859";
       }
       if(ShadowValue === "none"){
-        profileCard.style.display === "block" ? profileCard.style.boxShadow = "" : "";
-        watchCard.style.display === "block" ? watchCard.style.boxShadow = "" : "";
+        document.getElementById('creatorCard').style.boxShadow = "";
+        watchCard.style.boxShadow = "";
       }
+      shadowText.textContent = shadowSelect.value;
     })
 
     //Handle Background ( Toggle Track Base )
     const bgSelect = document.getElementById('bgSelect');
-    const name = document.getElementById('name'); 
-    const bg =  document.getElementById('bg'); 
-
     bgSelect.addEventListener('change', (e) => {
       const BackgroundValue = e.target.value;
+      bgText.textContent = `${BackgroundValue}`;
 
       if(BackgroundValue === "Dark"){
         console.log(BackgroundValue)
-        active === "product" ? watchCard.style.backgroundColor = "linear-gradient(180deg, #0b1329 0%, #060913 100%)" : "";
-        active === "creator" ? profileCard.style.backgroundColor = "linear-gradient(180deg, #0b1329 0%, #060913 100%)" : "";
+        activeCardRef.current === "product" ? watchCard.style.backgroundColor = "linear-gradient(135deg, #0b1329 0%, #060913 100%)" : ""; 
+        activeCardRef.current === "creator" ? document.getElementById('creatorCard').style.backgroundColor = "linear-gradient(180deg, #0b1329 0%, #060913 100%)": "";
       }
       if(BackgroundValue === "Light"){
-        if(active === "product"){
+        if(activeCardRef.current === "product"){
           watchCard.style.backgroundColor = "#ffffff"; 
+          const a289 = document.getElementById('289');
+          const aura = document.getElementById('aura');
+          a289.style.color = "#3e80f6";
+          aura.style.color = "#3e80f6";  
+          const a49 = document.getElementById('a4.9');
+          a49.style.color = "black";  
+         
+
         }
-        if(active === "creator") {
-          profileCard.style.backgroundColor = "#ffffff"
+        if(activeCardRef.current === "creator") {
+          document.getElementById('creatorCard').style.backgroundColor = "#ffffff"
+           const name = document.getElementById("name");
+          name.style.color = "darkBlue"; 
+          name.style.fontWeight = "bold"; 
         }
       } else {
-        if(active === "product"){
+        if(activeCardRef.current === "product"){
           watchCard.style.backgroundColor = "#0f172a"; 
         }
-        if(active === "creator") {
-          profileCard.style.backgroundColor = "#0f172a"
+        if(activeCardRef.current === "creator") {
+          document.getElementById('creatorCard').style.backgroundColor = "#0f172a"
         }
       }
     })
 
-  })
+  }, [])
 
 
+  
 
 //       useEffect(() => {
 
@@ -124,12 +131,9 @@ export default function Home() {
 //         const card = document.getElementById('card'); 
 //         
 //         const copy = document.getElementById('copy'); 
-//         const a289 = document.getElementById('289'); 
-//         const aura = document.getElementById('aura');
+     
 //         const creatorCard = document.getElementById('creatorCard'); 
 //         const followBtn = document.getElementById('followBtn'); 
-//         const codeSnippet1 = document.getElementById('codeSnippet'); 
-       
 //         const pre1 = document.getElementById('pre1'); 
 //         const pre2 = document.getElementById('pre2'); 
 //         
@@ -154,79 +158,77 @@ export default function Home() {
 //   otherBtn.classList.add(...inactiveClasses);
 // }
 
-       
-//         const sampleCode2 = `<!-- Modern Creator Profile Card -->
-// <article class="profile-card">
-//   <!-- Banner Backdrop -->
-//   <div class="banner">
-//     <span class="status-pill">Available for hire</span>
-//   </div>
+         const sampleCode2 = `<!-- Modern Creator Profile Card -->
+ <article class="profile-card">
+   <!-- Banner Backdrop -->
+   <div class="banner">
+     <span class="status-pill">Available for hire</span>
+   </div>
 
-//   <!-- Profile Details -->
-//   <div class="profile-content">
-//     <div class="avatar-wrap">
-//       <img src="avatar.jpg" alt="Thura Aung" class="avatar-img" />
-//       <span class="verified-badge">✓</span>
-//     </div>
+   <!-- Profile Details -->
+   <div class="profile-content">
+     <div class="avatar-wrap">
+       <img src="avatar.jpg" alt="Thura Aung" class="avatar-img" />
+       <span class="verified-badge">✓</span>
+     </div>
 
-//     <h3 class="profile-name">Thura Aung</h3>
-//     <p class="profile-role">Senior UI/UX & Creative Developer</p>
-//     <p class="profile-bio">
-//       Crafting responsive web designs, interactive design systems, and frontend experiences.
-//     </p>
+     <h3 class="profile-name">Thura Aung</h3>
+     <p class="profile-role">Senior UI/UX & Creative Developer</p>
+     <p class="profile-bio">
+       Crafting responsive web designs, interactive design systems, and frontend experiences.
+     </p>
 
-//     <!-- Stats -->
-//     <div class="stats-row">
-//       <div class="stat"><span class="num">48+</span><span class="label">Projects</span></div>
-//       <div class="stat"><span class="num">14.2k</span><span class="label">Followers</span></div>
-//       <div class="stat"><span class="num">99%</span><span class="label">Score</span></div>
-//     </div>
+     <!-- Stats -->
+     <div class="stats-row">
+       <div class="stat"><span class="num">48+</span><span class="label">Projects</span></div>
+              <div class="stat"><span class="num">14.2k</span><span class="label">Followers</span></div>
+       <div class="stat"><span class="num">99%</span><span class="label">Score</span></div>
+     </div>
 
-//     <!-- Actions -->
-//     <div class="action-row">
-//       <button class="btn-follow">Follow +</button>
-//       <button class="btn-icon" aria-label="Send message">✉</button>
-//     </div>
-//   </div>
-// </article>`; 
+     <!-- Actions -->
+     <div class="action-row">
+       <button class="btn-follow">Follow +</button>
+       <button class="btn-icon" aria-label="Send message">✉</button>
+     </div>
+   </div>
+ </article>`;
 
-// codeSnippet2.textContent = sampleCode2; 
 
-//         const sampleCode = `<!-- Modern Product Card Component -->
-// <article class="product-card">
-//   <!-- Media Container with Badges -->
-//   <div class="card-media">
-//     <img src="smartwatch.jpg" alt="Aura Horizon X Watch" class="card-img" />
-//     <span class="badge badge-primary">⚡ New Release</span>
-//     <button class="wishlist-btn" aria-label="Add to wishlist">♥</button>
-//   </div>
+ const sampleCode = `<!-- Modern Product Card Component -->
+ <article class="product-card">
+   <!-- Media Container with Badges -->
+   <div class="card-media">
+     <img src="smartwatch.jpg" alt="Aura Horizon X Watch" class="card-img" />
+     <span class="badge badge-primary">⚡ New Release</span>
+     <button class="wishlist-btn" aria-label="Add to wishlist">♥</button>
+   </div>
 
-// //   <!-- Content Section -->
-// //   <div class="card-body">
-// //     <div class="card-meta">
-// //       <span class="category">Wearables • Pro Edition</span>
-// //       <div class="rating">★ 4.9 <small>(128)</small></div>
-// //     </div>
+   <!-- Content Section -->
+   <div class="card-body">
+     <div class="card-meta">
+       <span class="category">Wearables • Pro Edition</span>
+       <div class="rating">★ 4.9 <small>(128)</small></div>
+     </div>
 
-// //     <h3 class="card-title">Aura Horizon X Watch</h3>
-// //     <p class="card-description">
-// //       Titanium ceramic chassis with bio-tracking metrics & 7-day battery life.
-// //     </p>
+     <h3 class="card-title">Aura Horizon X Watch</h3>
+     <p class="card-description">
+       Titanium ceramic chassis with bio-tracking metrics & 7-day battery life.
+     </p>
 
-// //     <!-- Pricing and Call to Action -->
-// //     <div class="card-footer">
-// //       <div class="price-box">
-// //         <span class="price-label">Price</span>
-// //         <div class="prices">
-// //           <span class="current-price">$289</span>
-// //           <span class="original-price">$349</span>
-// //         </div>
-// //       </div>
-// //       <button class="btn-primary">Add to Bag</button>
-// //     </div>
-// //   </div>`; 
+     <!-- Pricing and Call to Action -->
+     <div class="card-footer">
+            <div class="price-box">
+         <span class="price-label">Price</span>
+         <div class="prices">
+           <span class="current-price">$289</span>
+           <span class="original-price">$349</span>
+         </div>
+       </div>
+       <button class="btn-primary">Add to Bag</button>
+    </div>
+   </div>`;
 
-//   codeSnippet1.textContent  = sampleCode; 
+
 
 //   // CopyCode Button Function
 //   copy.addEventListener("click", async() => {
@@ -470,14 +472,14 @@ export default function Home() {
           <div className="flex justify-center  mx-3 ">
 
            <div className="flex  items-center bg-[#1D2839] w-full px-1 rounded-xl my-3 mx-5 justify-center border border-border gap-3">
-           <button id="productButton" className="flex gap-1 justify-center items-center w-full rounded-xl  mr-2 left-0 px-2 py-2 my-1" >
+           <button id="productButton" type="button" onClick={() => selectCard('product')} className={`flex gap-1 justify-center items-center w-full rounded-xl mr-2 left-0 px-2 py-2 my-1 ${activeCard === 'product' ? 'bg-blue-600 text-white shadow' : 'text-gray-400 hover:text-white'}`}>
             <img src="/shopping.png" className=" w-3 h-3 "></img>
             <p className='font-medium text-white text-[0.8rem]' >Product</p>
             </button>
 
             <div className="flex items-center">
               <div className="flex justify-center items-center gap-1 text-gray-400 hover:text-white px-2">
-              <button id="creatorButton" className="flex items-center gap-1 3 rounded-xl px-2 py-2 my-1 ">
+              <button id="creatorButton" type="button" onClick={() => selectCard('creator')} className={`flex items-center gap-1 rounded-xl px-2 py-2 my-1 ${activeCard === 'creator' ? 'bg-blue-600 text-white shadow' : 'text-gray-400 hover:text-white'}`}>
                 <img src="/creator.png" className="bg-none w-3 h-3 flex">
             </img>
             <p className="font-medium text-gray-400 text-[0.8rem] mr-4 hover:text-white cursor-pointer flex" >Creator</p>
@@ -517,7 +519,7 @@ export default function Home() {
 
     {/* Product Card  */}
     <div className='w-full h-[100%] flex justify-center items-center pt-10'>
-      <div style={{ display: "block" }} className="relative rounded-3xl mt-3 h-110 w-90 border border-white/20 overflow-hidden hover:-translate-y-3 hover:shadow-xl transition-all duration-500 ease-out" id="productCard">
+      <div style={{ display: activeCard === 'product' ? 'block' : 'none' }} className="relative rounded-3xl mt-3 h-110 w-90 border border-white/20 overflow-hidden hover:-translate-y-3 hover:shadow-xl transition-all duration-500 ease-out" id="productCard">
         <div 
         style={{ backgroundImage: `url(${Watch})`}}
         className='w-full h-[50%] bg-cover bg-center duration-500 ease-in-out group-hover:scale-110'></div>
@@ -525,7 +527,7 @@ export default function Home() {
         <div className="p-4">
           <div className="flex justify-between">
             <p className="text-blue-400 font-medium text-[0.8rem] ">WEARABLES PRO EDITION</p>
-            <p className="text-white font-medium text-[0.8rem] flex  ">4.9<span className="font-thin text-gray-400 ml-1 ">(128)</span></p>
+            <div className="flex"><p className="text-white font-medium text-[0.8rem] flex  " id="a4.9">4.9</p><span className="font-thin text-gray-400 ml-1 text-[0.8rem]">(128)</span></div>
           </div>
 
           <div>
@@ -556,7 +558,7 @@ export default function Home() {
       </div> 
 
       {/* Profile Card  */}
-      <div  id="creatorCard" className='hidden relative rounded-3xl mt-3 h-110 w-90 border border-white/20 overflow-hidden hover:-translate-y-3 hover:shadow-xl transition-all duration-500 ease-out"'>
+      <div id="creatorCard" style={{ display: activeCard === 'creator' ? 'block' : 'none' }} className="relative rounded-3xl mt-3 h-110 w-90 border border-white/20 overflow-hidden hover:-translate-y-3 hover:shadow-xl transition-all duration-500 ease-out">
         <div style={{ backgroundImage: `url(${BgImage})`}} className="h-25 bg-cover bg-center p-3 flex justify-end items-start">
           <span className="text-[#34d399] p-1 text-[10px] font-medium mx-3 border pl-4 pr-4 pt-1 pb-1 border-[#fff]/20 rounded-xl">Available</span>
         </div>
@@ -566,7 +568,7 @@ export default function Home() {
         </div>
 
         <div className="flex items-center flex-col text-center mt-15">
-          <h1 className="font-medium text-xl text-[#fff]" id="name">HWWH</h1>
+          <h1 className="font-bold text-2xl text-[#3e80f6]" id="name">HWWH</h1>
           <h4 className="text-[0.8rem] font-sans text-[#5c9ef0] ">Junior UI/UX & Creative Developer</h4>
           <p className="mt-1 px-3 font-sans text-[0.8rem] text-[#758397]">Crafting responsive web designs, interactive design systems, and frontend experiences.</p>
         </div> 
@@ -574,21 +576,21 @@ export default function Home() {
         <div className="flex items-center justify-between rounded-2xl border border-slate-700/60 bg-slate-900/40  py-3 m-6" id="bg">
           <div className="flex flex-1 flex-col items-center">
             <span className="text-xl font-bold text-white tracking-wide" id="h">2</span>
-            <span className="mt-1 text-xs font-semibold tracking-wider text-slate-800" id="p">PROJECTS</span>
+            <span className="mt-1 text-xs font-semibold tracking-wider text-slate-800 text-white" id="p">PROJECTS</span>
           </div>
 
           <div className="h-10 w-px bg-slate-800"></div>
 
           <div className="flex flex-1 flex-col items-center">
             <span className="text-xl font-bold text-white tracking-wide" id="h">5</span>
-            <span className="mt-1 text-xs font-semibold tracking-wider text-slate-800" id="p">FOLLOWERS</span>
+            <span className="mt-1 text-xs font-semibold tracking-wider text-slate-800 text-white" id="f">FOLLOWERS</span>
           </div>
 
           <div className="h-10 w-px bg-slate-800"></div>
 
           <div className="flex flex-1 flex-col items-center">
             <span className="text-xl font-bold text-white tracking-wide" id="h">80%</span>
-            <span className="mt-1 text-xs font-semibold tracking-wider text-slate-800" id="p">SCORE</span>
+            <span className="mt-1 text-xs font-semibold tracking-wider text-slate-800 text-white" id="s">SCORE</span>
           </div>
         </div>
 
@@ -680,18 +682,18 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 w-fit border border-border  px-4 py-2 rounded-xl bg-[#303845] hover:bg-[#5b5f87] cursor-pointer" id="copy">
+              <button type="button" onClick={copyActiveSnippet} className="flex items-center gap-2 w-fit border border-border px-4 py-2 rounded-xl bg-[#303845] hover:bg-[#5b5f87] cursor-pointer" id="copy">
                 <img src="/copy.png" alt="copy icon" className="w-2.5 h-2.5"/>
-                <p className="font-normal text-[0.8rem] border-border">Copy Code</p>
-              </div>
+                <p className="font-normal text-[0.8rem] border-border">{copyStatus}</p>
+              </button>
             </div>
             <div className="w-fill h-[80%]" >  
-              <pre className="w-fill h-100 overflow-scroll scroll-contain" id="pre1">
-                <code id="codeSnippet" className="font-mono text-[0.9rem] px-10 py-10 mt-5 text-gray-400"></code>
+              <pre className={`${activeCard === 'product' ? '' : 'hidden'} w-fill h-100 overflow-scroll scroll-contain`} id="pre1">
+                <code id="codeSnippet" className="font-mono text-[0.9rem] px-10 py-10 mt-5 text-gray-400">{sampleCode}</code>
               </pre>   
         
-              <pre className=" hidden w-fill h-100 overflow-scroll scroll-contain" id="pre2">
-                <code id="codeSnippet2" className="font-mono text-[0.9rem] px-10 py-10 mt-5 text-gray-400"></code>
+              <pre className={`${activeCard === 'creator' ? '' : 'hidden'} w-fill h-100 overflow-scroll scroll-contain`} id="pre2">
+                <code id="codeSnippet2" className="font-mono text-[0.9rem] px-10 py-10 mt-5 text-gray-400">{sampleCode2}</code>
               </pre>   
             </div>
             <div className="flex items-center justify-between border-t border-border mt-5  ">
