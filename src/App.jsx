@@ -1,4 +1,5 @@
  import './index.css'
+ import './App.css'
  import { useEffect, useRef, useState } from 'react';
  import Watch from '../public/watch.png';
  import BgImage from '../public/bg.png';
@@ -462,16 +463,16 @@ export default function Home() {
   return (
     <div className="bg-main">
 
-      <nav   className="flex justify-between  bg-[#10182B]/80 backdrop-blur-md h-17  w-full items-center top-0 sticky  z-50">
-      <div className="flex justify-center items-center">
+      <nav   className="app-nav flex justify-between  bg-[#10182B]/80 backdrop-blur-md h-17  w-full items-center top-0 sticky  z-50">
+      <div className="brand-header flex justify-center items-center">
             <img src="/headlogo.png" className="w-10 h-10 m-3 mr-0"></img>
             <h1 className="font-bold text-white ml-1">UIPlayground</h1>
             <p className="bg-[#1B2947] border-[#60A5FA] text-[#60A5FA] font-bold border rounded-xl text-[0.65em] px-2 py-0.9 mx-2 ">HTML & CSS</p>
           </div>
 
-          <div className="flex justify-center  mx-3 ">
+          <div className="nav-actions flex justify-center  mx-3 ">
 
-           <div className="flex  items-center bg-[#1D2839] w-full px-1 rounded-xl my-3 mx-5 justify-center border border-border gap-3">
+           <div className="nav-tabs flex  items-center bg-[#1D2839] w-full px-1 rounded-xl my-3 mx-5 justify-center border border-border gap-3">
            <button id="productButton" type="button" onClick={() => selectCard('product')} className={`flex gap-1 justify-center items-center w-full rounded-xl mr-2 left-0 px-2 py-2 my-1 ${activeCard === 'product' ? 'bg-blue-600 text-white shadow' : 'text-gray-400 hover:text-white'}`}>
             <img src="/shopping.png" className=" w-3 h-3 "></img>
             <p className='font-medium text-white text-[0.8rem]' >Product</p>
@@ -489,7 +490,7 @@ export default function Home() {
             
            </div>
 
-           <div className="flex justify-center border-2 hover:bg-[#324054] border-border my-3 px-3 rounded-2xl bg-[#1D2839]">
+           <div className="restart-control flex justify-center border-2 hover:bg-[#324054] border-border my-3 px-3 rounded-2xl bg-[#1D2839]">
             <button><img src="/restart.png" className="w-5 h-4 border border-border " id="restart"></img></button>
            </div>
 
@@ -498,10 +499,10 @@ export default function Home() {
       </nav>
 
 
-<div className="z-500 grid grid-cols-1 md:grid-cols-2">
+<div className="responsive-workspace z-500 grid grid-cols-1 md:grid-cols-2">
 
-  <div >
-    <div className="border border-border m-5 rounded-3xl p-6  bg-card-bg" id="card">
+  <div className="workspace-preview-column">
+    <div className="preview-panel border border-border m-5 rounded-3xl p-6  bg-card-bg" id="card">
 
     {/* Live Component Container */}
     <div className='flex justify-between items-center'>
@@ -518,8 +519,8 @@ export default function Home() {
     <hr className="mt-6 text-border/70 w-full mr-3"/>
 
     {/* Product Card  */}
-    <div className='w-full h-[100%] flex justify-center items-center pt-10'>
-      <div style={{ display: activeCard === 'product' ? 'block' : 'none' }} className="relative rounded-3xl mt-3 h-110 w-90 border border-white/20 overflow-hidden hover:-translate-y-3 hover:shadow-xl transition-all duration-500 ease-out" id="productCard">
+    <div className='preview-stage w-full h-[100%] flex justify-center items-center pt-10'>
+      <div style={{ display: activeCard === 'product' ? 'block' : 'none' }} className="preview-card relative rounded-3xl mt-3 h-110 w-90 border border-white/20 overflow-hidden hover:-translate-y-3 hover:shadow-xl transition-all duration-500 ease-out" id="productCard">
         <div 
         style={{ backgroundImage: `url(${Watch})`}}
         className='w-full h-[50%] bg-cover bg-center duration-500 ease-in-out group-hover:scale-110'></div>
@@ -558,7 +559,7 @@ export default function Home() {
       </div> 
 
       {/* Profile Card  */}
-      <div id="creatorCard" style={{ display: activeCard === 'creator' ? 'block' : 'none' }} className="relative rounded-3xl mt-3 h-110 w-90 border border-white/20 overflow-hidden hover:-translate-y-3 hover:shadow-xl transition-all duration-500 ease-out">
+      <div id="creatorCard" style={{ display: activeCard === 'creator' ? 'block' : 'none' }} className="preview-card relative rounded-3xl mt-3 h-110 w-90 border border-white/20 overflow-hidden hover:-translate-y-3 hover:shadow-xl transition-all duration-500 ease-out">
         <div style={{ backgroundImage: `url(${BgImage})`}} className="h-25 bg-cover bg-center p-3 flex justify-end items-start">
           <span className="text-[#34d399] p-1 text-[10px] font-medium mx-3 border pl-4 pr-4 pt-1 pb-1 border-[#fff]/20 rounded-xl">Available</span>
         </div>
@@ -609,8 +610,8 @@ export default function Home() {
     </div> 
   </div>
 
-  <div className="border border-border m-5 rounded-3xl p-6  bg-card-bg">
-    <div className="border border-[#000000] m-5 p-5 rounded-2xl bg-[#d9dadc] " >
+  <div className="sandbox-panel border border-border m-5 rounded-3xl p-6  bg-card-bg">
+    <div className="sandbox-content border border-[#000000] m-5 p-5 rounded-2xl bg-[#d9dadc] " >
       <div className="flex justify-between">
         <div className="flex items-center"><img src="./adjust.png" alt="adjust icon"  className="w-3 h-3 flex"></img>
           <p className="flex items-center font-extrabold text-white ml-2 text-[0.8rem]">Interactive CSS Property Sandbox</p>
@@ -664,10 +665,10 @@ export default function Home() {
 
   <div className="halfCode">
       <div>
-        <div className="border border-border p-5 m-5 rounded-xl">
+        <div className="code-panel border border-border p-5 m-5 rounded-xl">
           <div  className=" text-white">
-            <div className="flex justify-between ">
-              <div className="flex  gap-6 w-fit px-2 py-1 border border-border  rounded-xl bg-[#182134]">
+            <div className="code-toolbar flex justify-between ">
+              <div className="code-tabs flex  gap-6 w-fit px-2 py-1 border border-border  rounded-xl bg-[#182134]">
                 <div className="flex items-center justify-center gap-2 w-fit px-2 py-1 bg-blue-500 rounded-xl -mr-3  ">
                   <img src="/HTML.png" alt="HTML icon" className="w-2.5 h-2.5"></img>
                   <p className="font-normal text-[0.8rem]">HTML</p>
@@ -687,12 +688,12 @@ export default function Home() {
                 <p className="font-normal text-[0.8rem] border-border">{copyStatus}</p>
               </button>
             </div>
-            <div className="w-fill h-[80%]" >  
-              <pre className={`${activeCard === 'product' ? '' : 'hidden'} w-fill h-100 overflow-scroll scroll-contain`} id="pre1">
+            <div className="snippet-container w-full h-[80%]">
+              <pre className={`${activeCard === 'product' ? '' : 'hidden'} snippet-pre w-full h-100 overflow-scroll scroll-contain`} id="pre1">
                 <code id="codeSnippet" className="font-mono text-[0.9rem] px-10 py-10 mt-5 text-gray-400">{sampleCode}</code>
               </pre>   
         
-              <pre className={`${activeCard === 'creator' ? '' : 'hidden'} w-fill h-100 overflow-scroll scroll-contain`} id="pre2">
+              <pre className={`${activeCard === 'creator' ? '' : 'hidden'} snippet-pre w-full h-100 overflow-scroll scroll-contain`} id="pre2">
                 <code id="codeSnippet2" className="font-mono text-[0.9rem] px-10 py-10 mt-5 text-gray-400">{sampleCode2}</code>
               </pre>   
             </div>

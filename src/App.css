@@ -13,3 +13,134 @@
 [data-theme="Light"] .text-slate-800 {
   color: #334155;
 }
+
+.responsive-workspace,
+.workspace-preview-column,
+.halfCode,
+.code-panel,
+.snippet-container {
+  min-width: 0;
+}
+
+.preview-card {
+  width: min(100%, 22.5rem);
+}
+
+@media (max-width: 767px) {
+  .app-nav {
+    height: auto;
+    min-height: 4.25rem;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .brand-header {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .nav-actions {
+    width: 100%;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0;
+  }
+
+  .nav-tabs {
+    flex: 1;
+    max-width: 22rem;
+    gap: 0.25rem;
+    margin: 0;
+  }
+
+  .nav-tabs button {
+    flex: 1;
+    margin-right: 0;
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+  }
+
+  .nav-tabs button p {
+    margin-right: 0;
+  }
+
+  .restart-control {
+    margin: 0;
+  }
+
+  .preview-panel,
+  .sandbox-panel {
+    margin: 0.75rem;
+    padding: 1rem;
+  }
+
+  .preview-stage {
+    padding-top: 1.25rem;
+  }
+
+  .preview-card {
+    height: 27.5rem;
+    max-width: 22.5rem;
+  }
+
+  .sandbox-content {
+    margin: 0;
+    padding: 0.75rem;
+  }
+
+  .sandbox-content > div:first-child {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .code-panel {
+    margin: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .code-toolbar {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .code-tabs {
+    width: 100%;
+    max-width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .snippet-pre {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .snippet-pre code {
+    display: block;
+    min-width: max-content;
+    padding: 1rem;
+    font-size: 0.75rem;
+    line-height: 1.5;
+  }
+
+  .code-panel > div > div:last-child {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .code-panel > div > div:last-child > div {
+    margin-top: 0.75rem;
+  }
+
+  .responsive-workspace > div,
+  .halfCode > div,
+  .halfCode .grid > div {
+    min-width: 0;
+  }
+
+  .halfCode .grid > div code {
+    overflow-wrap: anywhere;
+  }
+}
