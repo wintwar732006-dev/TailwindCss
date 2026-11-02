@@ -1,43 +1,51 @@
- import './index.css'
- import { useEffect } from 'react'; 
- import Watch from '../public/watch.png';
- import BgImage from '../public/bg.png';
+import './index.css'
+import './App.css'
+import { useEffect } from 'react'
+
+const Watch = '/watch.png'
+const BgImage = '/bg.png'
+const shadowPresets = {
+  none: { label: 'None', value: 'none' },
+  soft: { label: 'Soft Subtle', value: '0 8px 24px rgba(2, 6, 23, 0.28)' },
+  floating: { label: 'Floating Drop Shadow', value: '0 20px 35px rgba(2, 6, 23, 0.45)' },
+  neon: { label: 'Neon Color Glow', value: '0 0 20px rgba(59, 130, 246, 0.55)' },
+}
 
 export default function Home() {
-
-      const productButton = document.getElementById('productButton'); 
-      const creatorButton = document.getElementById('creatorButton'); 
-
-      const handleToggle = () => {
-        productButton.addEventListener("click", ())
-      }
-
       useEffect(() => {
 
 
         
+        const productButton = document.getElementById('productButton');
+        const creatorButton = document.getElementById('creatorButton');
         const restart = document.getElementById('restart');
-        const addBag = document.getElementById('addBag'); 
         const range = document.getElementById('range'); 
         const radiusText = document.getElementById('radiusText'); 
         const shadowSelect = document.getElementById('shadowSelect'); 
-        const card = document.getElementById('card'); 
         const bgSelect = document.getElementById('bgSelect'); 
         const copy = document.getElementById('copy'); 
-        const a289 = document.getElementById('289'); 
-        const aura = document.getElementById('aura');
         const creatorCard = document.getElementById('creatorCard'); 
-        const followBtn = document.getElementById('followBtn'); 
         const codeSnippet1 = document.getElementById('codeSnippet'); 
         const codeSnippet2 = document.getElementById('codeSnippet2'); 
         const pre1 = document.getElementById('pre1'); 
         const pre2 = document.getElementById('pre2'); 
-        const profileCard = document.getElementById('profileCard'); 
-        const name = document.getElementById('name'); 
-        const bg =  document.getElementById('bg'); 
-        const h = document.getElementById('h'); 
-        const p = document.getElementById('p'); 
-        const watchCard = document.getElementById('watchCard'); 
+        const productCard = document.getElementById('productPreview');
+        const creatorPreview = document.getElementById('creatorPreview');
+        const shadowText = document.getElementById('shadowText');
+        const bgText = document.getElementById('bgText');
+        const copyLabel = copy.querySelector('p');
+        const styles = {
+          product: { radius: 24, shadow: 'none', theme: 'Dark' },
+          creator: { radius: 32, shadow: 'none', theme: 'Dark' },
+        };
+        let active = 'product';
+        let toastTimeout;
+        let copyTimeout;
+        const listeners = [];
+        const listen = (element, eventName, handler) => {
+          element.addEventListener(eventName, handler);
+          listeners.push([element, eventName, handler]);
+        };
        
    // Button element များကို ဆွဲထုတ်ခြင်း
 
@@ -130,13 +138,20 @@ codeSnippet2.textContent = sampleCode2;
   codeSnippet1.textContent  = sampleCode; 
 
   // CopyCode Button Function
-  copy.addEventListener("click", async() => {
-    await navigator.clipboard.writeText(sampleCode); 
-    copyBtn.textContent = "Copied!"; 
-    setTimeout(() => {
-      copyBtn.textContent = "Copy"; 
-    }, 2000); 
-  }); 
+  async function copyActiveCode() {
+    try {
+      const currentCode = active === 'product' ? codeSnippet1.textContent : codeSnippet2.textContent;
+      const currentStyle = styles[active];
+      await navigator.clipboard.writeText(`${currentCode}\n\n/* Live styles */\nborder-radius: ${currentStyle.radius}px;\nbox-shadow: ${shadowPresets[currentStyle.shadow].value};\nbackground-mode: ${currentStyle.theme};`);
+      copyLabel.textContent = 'Copied!';
+      window.clearTimeout(copyTimeout);
+      copyTimeout = window.setTimeout(() => { copyLabel.textContent = 'Copy Code'; }, 2000);
+    } catch (error) {
+      console.error('Unable to copy the card markup.', error);
+      copyLabel.textContent = 'Copy failed';
+    }
+  }
+  listen(copy, "click", copyActiveCode);
         
       //  creatorButton.addEventListener("click", () => {
       //   creatorCard.style.display = "block"; 
@@ -152,35 +167,57 @@ codeSnippet2.textContent = sampleCode2;
       //   pre2.style.display = "none"; 
       //  })
 
-        let active = "product";
-        // Track Toogle Button
-        productButton.addEventListener("click", () => {
-          active = "product";
-          // console.log(active)
+        function selectCard(cardType) {
+          active = cardType;
+          const isCreator = cardType === 'creator';
+          creatorCard.style.display = isCreator ? 'block' : 'none';
+          document.getElementById('card').style.display = isCreator ? 'none' : 'block';
+          pre1.style.display = isCreator ? 'none' : 'block';
+          pre2.style.display = isCreator ? 'block' : 'none';
+          range.value = styles[cardType].radius;
+          shadowSelect.value = styles[cardType].shadow;
+          bgSelect.value = styles[cardType].theme;
+          updatePreview();
+          setActiveTab(isCreator ? creatorButton : productButton, isCreator ? productButton : creatorButton);
+        }
 
-          creatorCard.style.display = "none";
-          watchCard.style.display = "block";
-        })
-        creatorButton.addEventListener("click", () => {
-          active = "creator";
-          // console.log(active)
-          if(active === "creator"){
-            creatorCard.style.display = "block";
-            watchCard.style.display = "none";
-          }
-        })
+        listen(productButton, "click", () => selectCard('product'));
+        listen(creatorButton, "click", () => selectCard('creator'));
         
 
-        function updateRadius(){
-          const val = range.value; 
-          radiusText.textContent = `${val}Px`; 
-          
-          if(watchCard) {
-            console.log("I'm working")
-          }
-        };
-        
-        range.addEventListener("change", updateRadius); 
+        function updatePreview() {
+          const currentStyle = styles[active];
+          const preview = active === 'product' ? productCard : creatorPreview;
+          const backgrounds = {
+            Dark: '#0a1022',
+            Glassmprphism: 'rgba(15, 23, 42, 0.78)',
+            Light: '#f8fafc',
+          };
+          preview.style.borderRadius = `${currentStyle.radius}px`;
+          preview.style.backgroundColor = backgrounds[currentStyle.theme];
+          preview.style.backdropFilter = currentStyle.theme === 'Glassmprphism' ? 'blur(12px)' : '';
+          preview.style.boxShadow = shadowPresets[currentStyle.shadow].value;
+          preview.dataset.theme = currentStyle.theme;
+          radiusText.textContent = `${currentStyle.radius}px`;
+          shadowText.textContent = shadowPresets[currentStyle.shadow].label;
+          bgText.textContent = currentStyle.theme === 'Glassmprphism'
+            ? 'Glassmorphism'
+            : currentStyle.theme === 'Light' ? 'Clean Light' : 'Deep Dark Slate';
+        }
+
+        listen(range, 'input', () => {
+          styles[active].radius = Number(range.value);
+          updatePreview();
+        });
+        listen(shadowSelect, 'change', () => {
+          styles[active].shadow = shadowSelect.value;
+          updatePreview();
+        });
+        listen(bgSelect, 'change', () => {
+          styles[active].theme = bgSelect.value;
+          updatePreview();
+        });
+        updatePreview();
       
         // function updateRadius(){
         //     let val = range.value; 
@@ -194,12 +231,12 @@ codeSnippet2.textContent = sampleCode2;
 
 
 
-        function refresh(){
-          window.location.reload(); 
-        }; 
-
-
-        restart.addEventListener("click", refresh); 
+        listen(restart, "click", () => {
+          active = 'product';
+          Object.assign(styles.product, { radius: 24, shadow: 'none', theme: 'Dark' });
+          Object.assign(styles.creator, { radius: 32, shadow: 'none', theme: 'Dark' });
+          selectCard('product');
+        });
 
        
 /*
@@ -344,9 +381,8 @@ codeSnippet2.textContent = sampleCode2;
       
       const addToastBtn = document.getElementById('addToastBtn'); 
       const toast = document.getElementById('toast'); 
-      let toastTimeout;
 
-      addToastBtn.addEventListener("click", () => {
+      listen(addToastBtn, "click", () => {
         clearTimeout(toastTimeout); 
       
         toast.classList.remove("hidden"); 
@@ -356,7 +392,7 @@ codeSnippet2.textContent = sampleCode2;
           toast.classList.add("opacity-100", "translate-y-0"); 
         }, 10); 
 
-        toastTimeout = setTimeOut(() => {
+        toastTimeout = window.setTimeout(() => {
           toast.classList.remove("opacity-100", "translate-y-0"); 
           toast.classList.add("opacity-0", "translate-y-5"); 
 
@@ -364,11 +400,17 @@ codeSnippet2.textContent = sampleCode2;
             toast.classList.add("hidden"); 
           }, 300); 
         }, 3000); 
-      }); 
-         
-        
+      });
 
-      })
+      setActiveTab(productButton, creatorButton);
+      return () => {
+        listeners.forEach(([element, eventName, handler]) => {
+          element.removeEventListener(eventName, handler);
+        });
+        window.clearTimeout(toastTimeout);
+        window.clearTimeout(copyTimeout);
+      };
+      }, []);
   return (
     <div className="bg-main">
 
@@ -390,8 +432,7 @@ codeSnippet2.textContent = sampleCode2;
             <div className="flex items-center">
               <div className="flex justify-center items-center gap-1 text-gray-400 hover:text-white px-2">
               <button id="creatorButton" className="flex items-center gap-1 3 rounded-xl px-2 py-2 my-1 ">
-                <img src="/creator.png" className="bg-none w-3 h-3 flex">
-            </img>
+                <img src="/creator.png" className="bg-none w-3 h-3 flex" alt="" />
             <p className="font-medium text-gray-400 text-[0.8rem] mr-4 hover:text-white cursor-pointer flex" >Creator</p>
               </button>
             </div>
@@ -427,7 +468,7 @@ codeSnippet2.textContent = sampleCode2;
 
     <div className="px-25 h-[80%] pt-3 group"> 
      
-      <div className=" relative rounded-3xl mt-3 h-110 border border-white/20 overflow-hidden hover:-translate-y-3 hover:shadow-xl transition-all duration-500 ease-out" id="profileCard"> {/* Card Container */}
+      <div className=" relative rounded-3xl mt-3 h-110 border border-white/20 overflow-hidden hover:-translate-y-3 hover:shadow-xl transition-all duration-500 ease-out" id="productPreview"> {/* Card Container */}
           {/* Card Cover Image  */}
           <div 
           style={{ backgroundImage: `url(${Watch})`}}
@@ -475,8 +516,6 @@ codeSnippet2.textContent = sampleCode2;
     </div>
 
     </div>
-/////
-   
     <div className="hidden border border-border m-5 rounded-3xl p-6  bg-card-bg" id="creatorCard">
 
            <div className='flex justify-between items-center'>
@@ -490,11 +529,9 @@ codeSnippet2.textContent = sampleCode2;
       </div>
     </div>
     <hr className="mt-6 text-border/70 w-ful mr-3"/>
-    ///
-
    <div className="px-25 rounded-xl" >
 
-     <div className="overflow-hidden text-white     border border-border rounded-4xl" id="profileCard" >
+     <div className="overflow-hidden text-white     border border-border rounded-4xl" id="creatorPreview" >
 
          <div className="mt-0" >
 
@@ -580,17 +617,17 @@ codeSnippet2.textContent = sampleCode2;
 
     <div>
       <div className="flex justify-between">
-        <label className="font-medium text-[0.8rem] text-gray-400 mt-3">border-radius</label>
+        <label htmlFor="range" className="font-medium text-[0.8rem] text-gray-400 mt-3">border-radius</label>
         <p id="radiusText" className="font-mono text-[0.8rem] mt-3 text-blue-500 ">Px</p>
       </div>
       <div>
-        <input type="range" className="w-full" id="range" min="0" max="100" defaultValue="20"></input>
+        <input type="range" className="w-full" id="range" min="0" max="48" defaultValue="20"></input>
       </div>
     </div>
 
      <div>
       <div className="flex justify-between">
-        <label className="font-medium text-[0.8rem] text-gray-400 mt-3">box-shadow</label>
+        <label htmlFor="shadowSelect" className="font-medium text-[0.8rem] text-gray-400 mt-3">box-shadow</label>
         <p id="shadowText" className="font-mono text-[0.8rem] mt-3 text-blue-500 "></p>
       </div>
       <select id="shadowSelect" className="w-full bg-border text-white px-3 py-2 rounded-xl  mt-1 text-[0.8rem] font-sans">
@@ -603,7 +640,7 @@ codeSnippet2.textContent = sampleCode2;
 
      <div>
       <div className="flex justify-between mt-3">
-        <label className="font-medium text-[0.8rem] text-gray-400 mt-3">background-mode</label>
+        <label htmlFor="bgSelect" className="font-medium text-[0.8rem] text-gray-400 mt-3">background-mode</label>
         <p id="bgText" className="font-mono text-[0.8rem] mt-3 text-blue-500 ">Dark Slate eg.</p>
       </div>
       <select id="bgSelect" className="w-full bg-border text-white px-3 py-2 rounded-xl  mt-1 text-[0.8rem] font-sans">
